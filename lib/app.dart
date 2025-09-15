@@ -13,14 +13,30 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
+import 'category_menu_page.dart';
+import 'backdrop.dart';
+import 'model/product.dart';
 import 'supplemental/cut_corners_border.dart';
 import 'colors.dart';
 import 'home.dart';
 import 'login.dart';
 
+class ShrineApp extends StatefulWidget {
+  Category _currentCategory = Category.all;
+
+  @override
+  State<ShrineApp> createState() => _ShrineAppState();
+}
+
 // TODO: Convert ShrineApp to stateful widget (104)
-class ShrineApp extends StatelessWidget {
-  const ShrineApp({Key? key}) : super(key: key);
+class _ShrineAppState extends State<ShrineApp> {
+
+  void _onCategoryTap(Category category) {
+    print(category);
+    setState(() {
+      widget._currentCategory = category;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +46,19 @@ class ShrineApp extends StatelessWidget {
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
         // TODO: Change to a Backdrop with a HomePage frontLayer (104)
-        '/': (BuildContext context) => const HomePage(),
+        '/': (BuildContext context) => BackDrop(
+          // TODO: Make currentCategory field take _currentCategory (104)
+          currentCategory: widget._currentCategory,
+          // TODO: Pass _currentCategory for frontLayer (104)
+          frontLayer: HomePage(category: widget._currentCategory),
+          // TODO: Change backLayer field value to CategoryMenuPage (104)
+          backLayer: CategoryMenuPage(
+            currentCategory: widget._currentCategory,
+            onCategoryTap: _onCategoryTap,
+          ),
+          frontTitle: const Text('SHRINE'),
+          backTitle: const Text('MENU'),
+        ),
         // TODO: Make currentCategory field take _currentCategory (104)
         // TODO: Pass _currentCategory for frontLayer (104)
         // TODO: Change backLayer field value to CategoryMenuPage (104)
@@ -57,6 +85,10 @@ ThemeData _buildShrineTheme() {
     textTheme: _buildShrineTextTheme(base.textTheme),
     textSelectionTheme: const TextSelectionThemeData(
       selectionColor: kShrinePink100,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: kShrinePink100,
+      foregroundColor: kShrineBrown900,
     ),
     inputDecorationTheme: const InputDecorationTheme(
       border: CutCornersBorder(),
