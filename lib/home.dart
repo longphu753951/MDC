@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shrine/model/products_repository.dart';
+import 'package:shrine/supplemental/asymmetric_view.dart';
 
 import 'model/product.dart';
 
@@ -42,6 +43,7 @@ class HomePage extends StatelessWidget {
                 aspectRatio: 18/11,
                 child: Image.asset(
                   product.assetName,
+                  fit: BoxFit.fitWidth,
                   package: product.assetPackage,
                   // TODO: Adjust the box size (102)
                 ),
@@ -50,17 +52,20 @@ class HomePage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           product.name,
                           style: theme.textTheme.titleLarge,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
                         const SizedBox(height: 4,),
                         Text(
                           formatter.format(product.price),
-                          style: theme.textTheme.titleSmall,
+                          style: theme.textTheme.bodySmall,
                         ),
                       ],
                     )
@@ -89,13 +94,7 @@ class HomePage extends StatelessWidget {
       ),
       // TODO: Add app bar (102)
       // TODO: Add a grid view (102)
-      body: GridView.count(
-          crossAxisCount: 2,
-          padding: const EdgeInsets.all(16.0),
-          childAspectRatio: 8.0 / 9.0,
-        children:
-          _buildGridCards(context),
-      ),
+      body: AsymmetricView(products: ProductsRepository.loadProducts(Category.all)),
       // TODO: Set resizeToAvoidBottomInset (101)
     );
   }
